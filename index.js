@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react'
 import { render, Box, Color } from 'ink'
 import useFilecoinConfig from './useFilecoinConfig'
 import InkWatchForExitKey from './inkWatchForExitKey'
+import joinGroup from './group' 
 
 const cli = meow(
   `
@@ -52,22 +53,49 @@ const cli = meow(
 )
 
 const args = cli.flags
+const command = cli.input[0]
 
-const Main = ({ done }) => {
+const Main = ({ done, group }) => {
   const [nickname] = useFilecoinConfig('heartbeat.nickname')
   if (nickname) {
     setImmediate(done)
   }
+
+  const files = group.collaboration.shared.value()
+  const data = (
+    <Box flexDirection="column">
+      {files.map((file, key) => <Box key={key}>{file}</Box>)}
+    </Box>
+  )
+
   return (
-    <Box>
-      Nickname: {nickname}
+    <Box flexDirection="column">
+      <Box>
+        Nickname: {nickname}
+      </Box>
+      <Box>
+        Command: {command}
+      </Box>
+      <Box>
+        # of files: {files.length}
+      </Box>
+      {data}
       <InkWatchForExitKey />
     </Box>
   )
 }
 
 async function run () {
-  const { unmount, rerender, waitUntilExit } = render(<Main done={done}/>)
+
+  const group = await joinGroup()
+
+  if (command === 'add') {
+    group.collaboration.shared.push(`Add: ${Date.now()}`)
+  }
+
+  const { unmount, rerender, waitUntilExit } = render(
+    <Main done={done} group={group} />
+  )
 
   process.on('SIGWINCH', () => rerender(<Main/>))
 
@@ -77,6 +105,7 @@ async function run () {
 
   try {
     await waitUntilExit()
+    await group.stop()
     process.exit(0)
   } catch (e) {
     console.error(e)
