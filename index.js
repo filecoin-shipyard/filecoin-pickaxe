@@ -11,6 +11,12 @@ const cli = meow(
     Usage
       $ pickaxe <command> [options]
 
+    Quick Start:
+
+      $ pickaxe add <file>
+      $ pickaxe import
+      $ pickaxe cids
+
     Commands:
 
       pickaxe init <name>
