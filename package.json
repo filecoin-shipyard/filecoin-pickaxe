@@ -1,0 +1,52 @@
+{
+  "name": "filecoin-pickaxe",
+  "version": "0.0.1",
+  "description": "Tool for storing/retrieving data in Filecoin",
+  "scripts": {
+    "help": "babel-node index.js --help",
+    "build": "babel *.js --out-dir dist",
+    "prepublish": "npm run build"
+  },
+  "bin": {
+    "pickaxe": "dist/index.js"
+  },
+  "keywords": [],
+  "author": "Jim Pick (@jimpick)",
+  "license": "MIT",
+  "dependencies": {
+    "bignumber.js": "^8.1.1",
+    "figures": "^2.0.0",
+    "filecoin-api-client": "^0.2.0",
+    "ink": "^2.1.1",
+    "meow": "^5.0.0",
+    "node-fetch": "^2.3.0",
+    "react": "^16.8.6"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/preset-env": "^7.4.3",
+    "babel-plugin-shebang": "^1.0.0",
+    "nodemon": "^1.18.11"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      "shebang",
+      "@babel/transform-react-jsx"
+    ]
+  },
+  "browserslist": "node 10",
+  "nodemonConfig": {
+    "stdin": false,
+    "restartable": false
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jimpick/filecoin-pickaxe.git"
+  }
+}
