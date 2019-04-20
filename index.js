@@ -6,6 +6,7 @@ import { render, Box, Color } from 'ink'
 import useFilecoinConfig from './useFilecoinConfig'
 import InkWatchForExitKey from './inkWatchForExitKey'
 import joinGroup from './group' 
+import addFile from './addFile' 
 
 const cli = meow(
   `
@@ -20,7 +21,7 @@ const cli = meow(
 
     Commands:
 
-      pickaxe init [name]
+      pickaxe init [groupname]
 
         - creates a new pickaxe group for organizing nodes, and adds
           an entry for this Filecoin node to it
@@ -55,7 +56,16 @@ const cli = meow(
 const args = cli.flags
 const command = cli.input[0]
 
-const Main = ({ done, group }) => {
+const Main = ({ done, group, error }) => {
+  if (error) {
+    setImmediate(done)
+    return (
+      <Box>
+        <Color red>Error: {error}</Color>
+      </Box>
+    )
+  }
+
   const [nickname] = useFilecoinConfig('heartbeat.nickname')
   if (nickname) {
     setImmediate(done)
@@ -86,18 +96,29 @@ const Main = ({ done, group }) => {
 }
 
 async function run () {
+  let error
 
   const group = await joinGroup()
 
   if (command === 'add') {
-    group.collaboration.shared.push(`Add: ${Date.now()}`)
+    const fileOrDir = cli.input[1]
+    await addFile({ group, fileOrDir, onError })
   }
 
-  const { unmount, rerender, waitUntilExit } = render(
-    <Main done={done} group={group} />
+  function onError (err) {
+    error = err
+  }
+
+  const main = (
+    <Main
+      done={done}
+      group={group}
+      error={error} />
   )
 
-  process.on('SIGWINCH', () => rerender(<Main/>))
+  const { unmount, rerender, waitUntilExit } = render(main)
+
+  process.on('SIGWINCH', () => rerender(main))
 
   function done () {
     unmount()
