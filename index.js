@@ -7,6 +7,7 @@ import useFilecoinConfig from './useFilecoinConfig'
 import InkWatchForExitKey from './inkWatchForExitKey'
 import joinGroup from './group' 
 import addFile from './addFile' 
+import importBundle from './importBundle' 
 
 const cli = meow(
   `
@@ -56,7 +57,7 @@ const cli = meow(
 const args = cli.flags
 const command = cli.input[0]
 
-const Main = ({ done, group, error }) => {
+const Main = ({ done, group, error, content }) => {
   if (error) {
     setImmediate(done)
     return (
@@ -67,12 +68,15 @@ const Main = ({ done, group, error }) => {
   }
 
   const [nickname] = useFilecoinConfig('heartbeat.nickname')
+  /*
   if (nickname) {
     setImmediate(done)
   }
+  */
 
   const files = group.collaboration.shared.value()
-  const data = (
+
+  const data = content ? content : (
     <Box flexDirection="column">
       {files.map((file, key) => <Box key={key}>{file}</Box>)}
     </Box>
@@ -97,6 +101,7 @@ const Main = ({ done, group, error }) => {
 
 async function run () {
   let error
+  let content
 
   const group = await joinGroup()
 
@@ -105,24 +110,37 @@ async function run () {
     await addFile({ group, fileOrDir, onError })
   }
 
+  if (command === 'import') {
+    await importBundle({ group, onError, onContent, done })
+  }
+
   function onError (err) {
     error = err
   }
 
-  const main = (
-    <Main
-      done={done}
-      group={group}
-      error={error} />
-  )
+  function main () {
+    return (
+      <Main
+        done={done}
+        group={group}
+        error={error}
+        content={content} />
+    )
+  }
 
-  const { unmount, rerender, waitUntilExit } = render(main)
+  const { unmount, rerender, waitUntilExit } = render(main())
 
-  process.on('SIGWINCH', () => rerender(main))
+  process.on('SIGWINCH', () => rerender(main()))
 
   function done () {
     unmount()
   }
+
+  function onContent (newContent) {
+    content = newContent
+    rerender(main())
+  }
+
 
   try {
     await waitUntilExit()
