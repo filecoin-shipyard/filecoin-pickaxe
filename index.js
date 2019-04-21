@@ -57,6 +57,33 @@ const cli = meow(
 const args = cli.flags
 const command = cli.input[0]
 
+const CommandRouter = ({ command, children }) => {
+  return (
+    <>
+    {
+      React.Children.map(children, child => {
+        return React.cloneElement(child, {
+          routerCommand: command
+        })
+      })
+    }
+    </>
+  )
+}
+
+const CommandMatch = ({ children, command, routerCommand }) => {
+  if (command === routerCommand) {
+    return (
+      <>
+      <Box>CommandMatch1: {command} {routerCommand}</Box>
+      {children}
+      </>
+    )
+  } else {
+    return null
+  }
+}
+
 const Main = ({ content, error, onExit }) => {
   const [nickname] = useFilecoinConfig('heartbeat.nickname')
 
@@ -77,6 +104,14 @@ const Main = ({ content, error, onExit }) => {
       <Box>
         Command: {command}
       </Box>
+      <CommandRouter command={command}>
+        <CommandMatch command="add">
+          <Box>CommandMatch2: add</Box>
+        </CommandMatch>
+        <CommandMatch command="ls">
+          <Box>CommandMatch2: ls</Box>
+        </CommandMatch>
+      </CommandRouter>
       {content && content({ onExit })}
       <InkWatchForExitKey />
     </Box>
