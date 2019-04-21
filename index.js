@@ -2,7 +2,7 @@
 
 import meow from 'meow'
 import React, { useState, useEffect } from 'react'
-import { render, Box, Color } from 'ink'
+import { render, Box, Color, AppContext } from 'ink'
 import useFilecoinConfig from './useFilecoinConfig'
 import InkWatchForExitKey from './inkWatchForExitKey'
 import joinGroup from './group' 
@@ -57,30 +57,17 @@ const cli = meow(
 const args = cli.flags
 const command = cli.input[0]
 
-const Main = ({ done, group, error, content }) => {
+const Main = ({ content, error, onExit }) => {
+  const [nickname] = useFilecoinConfig('heartbeat.nickname')
+
   if (error) {
-    setImmediate(done)
+    setImmediate(onExit)
     return (
       <Box>
         <Color red>Error: {error}</Color>
       </Box>
     )
   }
-
-  const [nickname] = useFilecoinConfig('heartbeat.nickname')
-  /*
-  if (nickname) {
-    setImmediate(done)
-  }
-  */
-
-  const files = group.collaboration.shared.value()
-
-  const data = content ? content : (
-    <Box flexDirection="column">
-      {files.map((file, key) => <Box key={key}>{file}</Box>)}
-    </Box>
-  )
 
   return (
     <Box flexDirection="column">
@@ -90,10 +77,7 @@ const Main = ({ done, group, error, content }) => {
       <Box>
         Command: {command}
       </Box>
-      <Box>
-        # of files: {files.length}
-      </Box>
-      {data}
+      {content && content({ onExit })}
       <InkWatchForExitKey />
     </Box>
   )
@@ -108,10 +92,30 @@ async function run () {
   if (command === 'add') {
     const fileOrDir = cli.input[1]
     await addFile({ group, fileOrDir, onError })
+    content = listFiles()
   }
 
   if (command === 'import') {
-    await importBundle({ group, onError, onContent, done })
+    await importBundle({ group, onError, onContent, onExit })
+  }
+
+  if (command === 'ls') {
+    content = listFiles()
+  }
+
+  function listFiles () {
+    const files = group.collaboration.shared.value()
+    return ({ onExit }) => {
+      useEffect(onExit, [])
+      return (
+        <Box flexDirection="column">
+          <Box>
+            # of files: {files.length}
+          </Box>
+          {files.map((file, key) => <Box key={key}>{file}</Box>)}
+        </Box>
+      )
+    }
   }
 
   function onError (err) {
@@ -120,11 +124,14 @@ async function run () {
 
   function main () {
     return (
-      <Main
-        done={done}
-        group={group}
-        error={error}
-        content={content} />
+      <AppContext.Consumer>
+        {({ exit }) => (
+          <Main
+            onExit={exit}
+            error={error}
+            content={content} />
+        )}
+      </AppContext.Consumer>
     )
   }
 
@@ -132,7 +139,7 @@ async function run () {
 
   process.on('SIGWINCH', () => rerender(main()))
 
-  function done () {
+  function onExit () {
     unmount()
   }
 
@@ -140,7 +147,6 @@ async function run () {
     content = newContent
     rerender(main())
   }
-
 
   try {
     await waitUntilExit()
