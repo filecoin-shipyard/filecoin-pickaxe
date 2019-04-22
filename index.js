@@ -25,6 +25,10 @@ const cli = meow(
 
     Commands:
 
+      pickaxe help
+
+        - shows this usage message
+
       pickaxe init [groupname]
 
         - creates a new pickaxe group for organizing nodes, and adds
@@ -70,6 +74,10 @@ if (!command) {
   console.error('Missing command')
   console.error('Run `pickaxe --help` for help')
   process.exit(1)
+}
+
+if (command === 'help') {
+  cli.showHelp()
 }
 
 const Main = () => {
