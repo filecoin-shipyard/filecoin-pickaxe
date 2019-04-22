@@ -3,14 +3,14 @@
 import meow from 'meow'
 import React, { useState } from 'react'
 import { render, Box, Color } from 'ink'
-import { CommandRouter, CommandMatch } from './commandRouter'
-import WatchForExitKey from './inkWatchForExitKey'
+import { CommandRouter, CommandMatch, CommandDefault } from './commandRouter'
 import ExitNow from './inkExitNow'
 import { groupStart, groupStop } from './group'
 import { ConnectGroup } from './groupContext'
 import ListBundles from './listBundles'
 import AddFileOrDir from './addFileOrDir'
 import ImportBundle from './importBundle'
+import WatchForExitKey from './inkWatchForExitKey'
 
 const cli = meow(
   `
@@ -50,6 +50,12 @@ const cli = meow(
       pickaxe cids
 
         - lists the CIDs imported into the local Filecoin node
+          for the current bundle
+
+      pickaxe sync
+
+        - stays connected to the network so other machines can
+          sync the state (bundles, etc.)
   `,
   {
     flags: {
@@ -59,6 +65,12 @@ const cli = meow(
 
 const args = cli.flags
 const command = cli.input[0]
+
+if (!command) {
+  console.error('Missing command')
+  console.error('Run `pickaxe --help` for help')
+  process.exit(1)
+}
 
 const Main = () => {
   const [error, setError] = useState()
@@ -85,8 +97,20 @@ const Main = () => {
           <CommandMatch command="import">
             <ImportBundle />
           </CommandMatch>
+          <CommandMatch command="sync">
+            <Box>Syncing via network...</Box>
+            <WatchForExitKey />
+          </CommandMatch>
+          <CommandDefault>
+            <Box flexDirection="column">
+              <Box>
+                <Color red>Didn't recognize command: {command}</Color>
+              </Box>
+              <Box>Run `pickaxe --help` for help</Box>
+              <ExitNow error="Error displayed" />
+            </Box>
+          </CommandDefault>
         </CommandRouter>
-        <WatchForExitKey />
       </Box>
     </ConnectGroup>
   )

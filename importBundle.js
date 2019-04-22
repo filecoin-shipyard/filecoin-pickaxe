@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Box } from 'ink'
 import GroupContext from './groupContext'
 import ExitNow from './inkExitNow'
+import WatchForExitKey from './inkWatchForExitKey'
 
 function Import ({ group }) {
   const [counter, setCounter] = useState(0)
@@ -35,12 +36,18 @@ export default function ImportBundle () {
       {
         group => {
           if (!group) {
-            return <Box>Loading...</Box>
+            return (
+              <>
+                <Box>Loading...</Box>
+                <WatchForExitKey />
+              </>
+            )
           }
           return (
             <>
               <Box>Import</Box>
               <Import group={group} />
+              <WatchForExitKey />
             </>
           )
         }
