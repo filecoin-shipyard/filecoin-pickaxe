@@ -2,7 +2,7 @@
 
 import meow from 'meow'
 import React, { useState, useEffect } from 'react'
-import { render, Box, Color, AppContext } from 'ink'
+import { render, Box, Color } from 'ink'
 import useFilecoinConfig from './useFilecoinConfig'
 import InkWatchForExitKey from './inkWatchForExitKey'
 import { groupStart, groupStop } from './group'
@@ -10,6 +10,7 @@ import importBundle from './importBundle'
 import { ConnectGroup } from './groupContext'
 import ListBundles from './listBundles'
 import AddFileOrDir from './addFileOrDir'
+import ExitNow from './inkExitNow'
 
 const cli = meow(
   `
@@ -77,37 +78,39 @@ const CommandMatch = ({ children, command, routerCommand }) => {
   return command === routerCommand ? children : null
 }
 
-const Main = ({ onExit }) => {
+const Main = () => {
   const [error, setError] = useState()
   const [nickname] = useFilecoinConfig('heartbeat.nickname')
 
   if (error) {
-    setImmediate(() => onExit(new Error('Error displayed')))
     return (
       <Box>
         <Color red>Error: {error}</Color>
+        <ExitNow error="Error displayed" />
       </Box>
     )
   }
 
   return (
-    <Box flexDirection="column">
-      <Box>
-        Nickname: {nickname}
+    <ConnectGroup>
+      <Box flexDirection="column">
+        <Box>
+          Nickname: {nickname}
+        </Box>
+        <Box>
+          Command: {command}
+        </Box>
+        <CommandRouter command={command}>
+          <CommandMatch command="add">
+            <AddFileOrDir fileOrDir={cli.input[1]} onError={setError} />
+          </CommandMatch>
+          <CommandMatch command="ls">
+            <ListBundles />
+          </CommandMatch>
+        </CommandRouter>
+        <InkWatchForExitKey />
       </Box>
-      <Box>
-        Command: {command}
-      </Box>
-      <CommandRouter command={command}>
-        <CommandMatch command="add">
-          <AddFileOrDir fileOrDir={cli.input[1]} onError={setError} />
-        </CommandMatch>
-        <CommandMatch command="ls">
-          <ListBundles />
-        </CommandMatch>
-      </CommandRouter>
-      <InkWatchForExitKey />
-    </Box>
+    </ConnectGroup>
   )
 }
 
@@ -115,36 +118,14 @@ async function run () {
   await groupStart()
 
   /*
-  if (command === 'add') {
-    const fileOrDir = cli.input[1]
-    await addFile({ group, fileOrDir, onError })
-    content = listFiles()
-  }
-
   if (command === 'import') {
     await importBundle({ group, onError, onContent, onExit })
   }
-
   */
 
-  function main () {
-    return (
-      <ConnectGroup>
-        <AppContext.Consumer>
-          {({ exit }) => <Main onExit={exit} />}
-        </AppContext.Consumer>
-      </ConnectGroup>
-    )
-  }
+  const { unmount, rerender, waitUntilExit } = render(<Main />)
 
-  const { unmount, rerender, waitUntilExit } = render(main())
-
-  process.on('SIGWINCH', () => rerender(main()))
-
-  function onContent (newContent) {
-    content = newContent
-    rerender(main())
-  }
+  process.on('SIGWINCH', () => rerender(<Main />))
 
   try {
     await waitUntilExit()

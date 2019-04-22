@@ -26,7 +26,7 @@ export default async function addFile ({
   } catch (e) {
     // console.error('Exception', e)
     if (e.code === 'ENOENT') {
-      onError('File not found')
+      onError(`File not found: ${fileOrDir}`)
       return
     }
     onError('An error occurred')
