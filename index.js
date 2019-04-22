@@ -6,10 +6,10 @@ import { render, Box, Color, AppContext } from 'ink'
 import useFilecoinConfig from './useFilecoinConfig'
 import InkWatchForExitKey from './inkWatchForExitKey'
 import { groupStart, groupStop } from './group'
-import addFile from './addFile' 
 import importBundle from './importBundle'
 import { ConnectGroup } from './groupContext'
 import ListBundles from './listBundles'
+import AddFileOrDir from './addFileOrDir'
 
 const cli = meow(
   `
@@ -77,11 +77,12 @@ const CommandMatch = ({ children, command, routerCommand }) => {
   return command === routerCommand ? children : null
 }
 
-const Main = ({ content, error, onExit }) => {
+const Main = ({ onExit }) => {
+  const [error, setError] = useState()
   const [nickname] = useFilecoinConfig('heartbeat.nickname')
 
   if (error) {
-    setImmediate(onExit)
+    setImmediate(() => onExit(new Error('Error displayed')))
     return (
       <Box>
         <Color red>Error: {error}</Color>
@@ -99,22 +100,18 @@ const Main = ({ content, error, onExit }) => {
       </Box>
       <CommandRouter command={command}>
         <CommandMatch command="add">
-          <Box>CommandMatch2: add</Box>
+          <AddFileOrDir fileOrDir={cli.input[1]} onError={setError} />
         </CommandMatch>
         <CommandMatch command="ls">
           <ListBundles />
         </CommandMatch>
       </CommandRouter>
-      {content && content({ onExit })}
       <InkWatchForExitKey />
     </Box>
   )
 }
 
 async function run () {
-  let error
-  let content
-
   await groupStart()
 
   /*
@@ -128,40 +125,13 @@ async function run () {
     await importBundle({ group, onError, onContent, onExit })
   }
 
-  if (command === 'ls') {
-    content = listFiles()
-  }
   */
-
-  function listFiles () {
-    const files = group.collaboration.shared.value()
-    return ({ onExit }) => {
-      useEffect(onExit, [])
-      return (
-        <Box flexDirection="column">
-          <Box>
-            # of files: {files.length}
-          </Box>
-          {files.map((file, key) => <Box key={key}>{file}</Box>)}
-        </Box>
-      )
-    }
-  }
-
-  function onError (err) {
-    error = err
-  }
 
   function main () {
     return (
       <ConnectGroup>
         <AppContext.Consumer>
-          {({ exit }) => (
-            <Main
-              onExit={exit}
-              error={error}
-              content={content} />
-          )}
+          {({ exit }) => <Main onExit={exit} />}
         </AppContext.Consumer>
       </ConnectGroup>
     )
@@ -170,10 +140,6 @@ async function run () {
   const { unmount, rerender, waitUntilExit } = render(main())
 
   process.on('SIGWINCH', () => rerender(main()))
-
-  function onExit () {
-    unmount()
-  }
 
   function onContent (newContent) {
     content = newContent
@@ -185,7 +151,9 @@ async function run () {
     await groupStop()
     process.exit(0)
   } catch (e) {
-    console.error(e)
+    if (e.message !== 'Error displayed') {
+      console.error(e)
+    }
     process.exit(1)
   }
 }
