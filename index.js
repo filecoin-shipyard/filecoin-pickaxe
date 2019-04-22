@@ -11,7 +11,6 @@ import { ConnectGroup } from './groupContext'
 import ListBundles from './listBundles'
 import AddFileOrDir from './addFileOrDir'
 import ImportBundle from './importBundle'
-import useFilecoinConfig from './useFilecoinConfig'
 
 const cli = meow(
   `
@@ -63,7 +62,6 @@ const command = cli.input[0]
 
 const Main = () => {
   const [error, setError] = useState()
-  const [nickname] = useFilecoinConfig('heartbeat.nickname')
 
   if (error) {
     return (
@@ -77,12 +75,6 @@ const Main = () => {
   return (
     <ConnectGroup>
       <Box flexDirection="column">
-        <Box>
-          Nickname: {nickname}
-        </Box>
-        <Box>
-          Command: {command}
-        </Box>
         <CommandRouter command={command}>
           <CommandMatch command="add">
             <AddFileOrDir fileOrDir={cli.input[1]} onError={setError} />
