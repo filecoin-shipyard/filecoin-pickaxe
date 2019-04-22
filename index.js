@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 
 import meow from 'meow'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { render, Box, Color } from 'ink'
-import useFilecoinConfig from './useFilecoinConfig'
-import InkWatchForExitKey from './inkWatchForExitKey'
+import { CommandRouter, CommandMatch } from './commandRouter'
+import WatchForExitKey from './inkWatchForExitKey'
+import ExitNow from './inkExitNow'
 import { groupStart, groupStop } from './group'
-import importBundle from './importBundle'
 import { ConnectGroup } from './groupContext'
 import ListBundles from './listBundles'
 import AddFileOrDir from './addFileOrDir'
-import ExitNow from './inkExitNow'
+import ImportBundle from './importBundle'
+import useFilecoinConfig from './useFilecoinConfig'
 
 const cli = meow(
   `
@@ -60,24 +61,6 @@ const cli = meow(
 const args = cli.flags
 const command = cli.input[0]
 
-const CommandRouter = ({ command, children }) => {
-  return (
-    <>
-    {
-      React.Children.map(children, child => {
-        return React.cloneElement(child, {
-          routerCommand: command
-        })
-      })
-    }
-    </>
-  )
-}
-
-const CommandMatch = ({ children, command, routerCommand }) => {
-  return command === routerCommand ? children : null
-}
-
 const Main = () => {
   const [error, setError] = useState()
   const [nickname] = useFilecoinConfig('heartbeat.nickname')
@@ -107,8 +90,11 @@ const Main = () => {
           <CommandMatch command="ls">
             <ListBundles />
           </CommandMatch>
+          <CommandMatch command="import">
+            <ImportBundle />
+          </CommandMatch>
         </CommandRouter>
-        <InkWatchForExitKey />
+        <WatchForExitKey />
       </Box>
     </ConnectGroup>
   )
@@ -116,12 +102,6 @@ const Main = () => {
 
 async function run () {
   await groupStart()
-
-  /*
-  if (command === 'import') {
-    await importBundle({ group, onError, onContent, onExit })
-  }
-  */
 
   const { unmount, rerender, waitUntilExit } = render(<Main />)
 
