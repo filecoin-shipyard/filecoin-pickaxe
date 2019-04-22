@@ -5,9 +5,11 @@ import React, { useState, useEffect } from 'react'
 import { render, Box, Color, AppContext } from 'ink'
 import useFilecoinConfig from './useFilecoinConfig'
 import InkWatchForExitKey from './inkWatchForExitKey'
-import joinGroup from './group' 
+import { groupStart, groupStop } from './group'
 import addFile from './addFile' 
-import importBundle from './importBundle' 
+import importBundle from './importBundle'
+import { ConnectGroup } from './groupContext'
+import ListBundles from './listBundles'
 
 const cli = meow(
   `
@@ -72,16 +74,7 @@ const CommandRouter = ({ command, children }) => {
 }
 
 const CommandMatch = ({ children, command, routerCommand }) => {
-  if (command === routerCommand) {
-    return (
-      <>
-      <Box>CommandMatch1: {command} {routerCommand}</Box>
-      {children}
-      </>
-    )
-  } else {
-    return null
-  }
+  return command === routerCommand ? children : null
 }
 
 const Main = ({ content, error, onExit }) => {
@@ -109,7 +102,7 @@ const Main = ({ content, error, onExit }) => {
           <Box>CommandMatch2: add</Box>
         </CommandMatch>
         <CommandMatch command="ls">
-          <Box>CommandMatch2: ls</Box>
+          <ListBundles />
         </CommandMatch>
       </CommandRouter>
       {content && content({ onExit })}
@@ -122,8 +115,9 @@ async function run () {
   let error
   let content
 
-  const group = await joinGroup()
+  await groupStart()
 
+  /*
   if (command === 'add') {
     const fileOrDir = cli.input[1]
     await addFile({ group, fileOrDir, onError })
@@ -137,6 +131,7 @@ async function run () {
   if (command === 'ls') {
     content = listFiles()
   }
+  */
 
   function listFiles () {
     const files = group.collaboration.shared.value()
@@ -159,14 +154,16 @@ async function run () {
 
   function main () {
     return (
-      <AppContext.Consumer>
-        {({ exit }) => (
-          <Main
-            onExit={exit}
-            error={error}
-            content={content} />
-        )}
-      </AppContext.Consumer>
+      <ConnectGroup>
+        <AppContext.Consumer>
+          {({ exit }) => (
+            <Main
+              onExit={exit}
+              error={error}
+              content={content} />
+          )}
+        </AppContext.Consumer>
+      </ConnectGroup>
     )
   }
 
@@ -185,7 +182,7 @@ async function run () {
 
   try {
     await waitUntilExit()
-    await group.stop()
+    await groupStop()
     process.exit(0)
   } catch (e) {
     console.error(e)

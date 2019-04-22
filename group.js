@@ -37,8 +37,17 @@ class Group {
   }
 }
 
-export default async function joinGroup () {
-  const group = new Group()
+let group
+
+export async function groupStart () {
+  group = new Group()
   await group.start()
+}
+
+export function getGroup () {
   return group
+}
+
+export async function groupStop () {
+  await group.stop()
 }
