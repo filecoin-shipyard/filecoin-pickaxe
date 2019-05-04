@@ -7,11 +7,11 @@ import { CommandRouter, CommandMatch, CommandDefault } from './commandRouter'
 import ExitNow from './inkExitNow'
 import { groupStart, groupStop } from './group'
 import { ConnectGroup } from './groupContext'
-import ListBundles from './listBundles'
-import AddFileOrDir from './addFileOrDir'
-import ImportBundle from './importBundle'
-import ResetAllBundles from './resetAllBundles'
 import WatchForExitKey from './inkWatchForExitKey'
+import ListBundles from './commands/listBundles'
+import AddFileOrDir from './commands/addFileOrDir'
+import ImportBundle from './commands/importBundle'
+import ResetAllBundles from './commands/resetAllBundles'
 
 const cli = meow(
   `

@@ -2,9 +2,9 @@ import fs from 'fs'
 import React, { useState, useEffect } from 'react'
 import { Box } from 'ink'
 import Filecoin from 'filecoin-api-client'
-import GroupContext from './groupContext'
-import ExitNow from './inkExitNow'
-import WatchForExitKey from './inkWatchForExitKey'
+import GroupContext from '../groupContext'
+import ExitNow from '../inkExitNow'
+import WatchForExitKey from '../inkWatchForExitKey'
 
 const fc = Filecoin()
 

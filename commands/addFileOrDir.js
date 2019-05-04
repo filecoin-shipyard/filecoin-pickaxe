@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Box } from 'ink'
-import GroupContext from './groupContext'
+import GroupContext from '../groupContext'
 import addFile from './addFile' 
 import ListBundles from './listBundles'
 

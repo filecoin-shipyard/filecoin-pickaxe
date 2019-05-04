@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Box } from 'ink'
-import GroupContext from './groupContext'
+import GroupContext from '../groupContext'
 import ListBundles from './listBundles'
 
 function Reset ({ group, onError }) {

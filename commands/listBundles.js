@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box } from 'ink'
-import GroupContext from './groupContext'
-import ExitNow from './inkExitNow'
+import GroupContext from '../groupContext'
+import ExitNow from '../inkExitNow'
 
 function ListAll ({ group }) {
   const files = group.collaboration.shared.value()
