@@ -26,6 +26,19 @@
       "runtimeArgs": [
         "babel-node"
       ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "pickaxe reset-all",
+      "program": "${workspaceFolder}/index.js",
+      "args": [
+        "reset-all"
+      ],
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "babel-node"
+      ]
     }
   ]
 }

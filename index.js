@@ -10,6 +10,7 @@ import { ConnectGroup } from './groupContext'
 import ListBundles from './listBundles'
 import AddFileOrDir from './addFileOrDir'
 import ImportBundle from './importBundle'
+import ResetAllBundles from './resetAllBundles'
 import WatchForExitKey from './inkWatchForExitKey'
 
 const cli = meow(
@@ -60,6 +61,10 @@ const cli = meow(
 
         - stays connected to the network so other machines can
           sync the state (bundles, etc.)
+
+      pickaxe reset-all
+
+        - removes all bundles
   `,
   {
     flags: {
@@ -104,6 +109,9 @@ const Main = () => {
           </CommandMatch>
           <CommandMatch command="import">
             <ImportBundle />
+          </CommandMatch>
+          <CommandMatch command="reset-all">
+            <ResetAllBundles />
           </CommandMatch>
           <CommandMatch command="sync">
             <Box>Syncing via network...</Box>
