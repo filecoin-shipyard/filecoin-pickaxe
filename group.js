@@ -23,11 +23,11 @@ class Group {
         ]
       }
     })
-    this.app.start()
   }
 
   async start () {
     const name = 'pickaxe-dev'
+    await this.app.start()
     this.collaboration = await this.app.collaborate(name, 'rga')
   }
 

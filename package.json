@@ -18,10 +18,12 @@
     "delay": "^4.2.0",
     "figures": "^2.0.0",
     "filecoin-api-client": "^0.2.0",
+    "haikunator": "^2.1.1",
     "ink": "^2.1.1",
     "meow": "^5.0.0",
     "node-fetch": "^2.3.0",
     "peer-base": "0.12.0-rc6",
+    "protocol-words": "^0.0.7",
     "react": "^16.8.6"
   },
   "devDependencies": {
@@ -40,7 +42,8 @@
     "plugins": [
       "shebang",
       "@babel/transform-react-jsx"
-    ]
+    ],
+    "sourceMaps": "inline"
   },
   "browserslist": "node 10",
   "nodemonConfig": {
