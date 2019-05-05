@@ -30,37 +30,32 @@ const cli = meow(
 
         - shows this usage message
 
-      pickaxe init [groupname]
+      pickaxe add <file>
 
-        - creates a new pickaxe group for organizing nodes, and adds
-          an entry for this Filecoin node to it
+        - creates a new "bundle" and adds a file.
+        
+        In the future, multiple files will be permitted per
+        bundle, but for now, only a single file is supported
 
-      pickaxe bundle create <bundlename>
-
-        - creates a new "bundle" to manage files from a set of sources
-
-      pickaxe add <file or directory>
-
-        - adds the file or directory as a source in the bundle
-
-      pickaxe import
+      pickaxe import [--bundle <bundle-name>]
 
         - processes all the sources in the bundle and imports
           them into the local Filecoin node. This involves:
 
           * gets data from sources:
-              * reads files / traversing directories
+              * reads files
           * importing the data into the local Filecoin node
 
-      pickaxe cids
+      pickaxe cids [--bundle <bundle-name>]
 
         - lists the CIDs imported into the local Filecoin node
-          for the current bundle
+          for the bundle
 
-      pickaxe sync
+      pickaxe ls [--raw]
 
-        - stays connected to the network so other machines can
-          sync the state (bundles, etc.)
+        - lists all of the bundles
+
+        --raw flag displays JSON data
 
       pickaxe reset-all
 
@@ -68,11 +63,14 @@ const cli = meow(
   `,
   {
     flags: {
+      raw: {
+        type: 'boolean'
+      }
     }
   }
 )
 
-const args = cli.flags
+const flags = cli.flags
 const command = cli.input[0]
 
 if (!command) {
@@ -105,7 +103,7 @@ const Main = () => {
             <AddFileOrDir fileOrDir={cli.input[1]} onError={setError} />
           </CommandMatch>
           <CommandMatch command="ls">
-            <ListBundles />
+            <ListBundles flags={flags}/>
           </CommandMatch>
           <CommandMatch command="import">
             <ImportBundle />

@@ -1,22 +1,47 @@
+import path from 'path'
 import React from 'react'
-import { Box } from 'ink'
+import { Box, Color } from 'ink'
 import GroupContext from '../groupContext'
 import ExitNow from '../inkExitNow'
 
-function ListAll ({ group }) {
-  const files = group.collaboration.shared.value()
+function Bundle ({ bundle, flags }) {
+  if (flags.raw) {
+    return (
+      <Box>
+        {bundle}
+      </Box>
+    )
+  }
+  const { name, sources } = JSON.parse(bundle)
+  const { base } = path.parse(sources[0].file)
   return (
     <Box flexDirection="column">
       <Box>
-        # of files: {files.length}
+        <Color cyan>{name}:</Color>
       </Box>
-      {files.map((file, key) => <Box key={key}>{file}</Box>)}
+      <Box>
+        <Color yellow>{'  ' + base}</Color>
+      </Box>
+    </Box>
+  )
+}
+
+function ListAll ({ group, flags }) {
+  const bundles = group.collaboration.shared.value()
+  return (
+    <Box flexDirection="column">
+      <Box>
+        # of bundles: {bundles.length}
+      </Box>
+      {bundles.map((bundle, key) => (
+        <Bundle key={key} bundle={bundle} flags={flags} />
+      ))}
       <ExitNow />
     </Box>
   )
 }
 
-export default function ListBundles () {
+export default function ListBundles ({ flags }) {
   return (
     <GroupContext.Consumer>
       {
@@ -24,12 +49,7 @@ export default function ListBundles () {
           if (!group) {
             return <Box>Loading...</Box>
           }
-          return (
-            <>
-              <Box>ListBundles</Box>
-              <ListAll group={group} />
-            </>
-          )
+          return <ListAll group={group} flags={flags} />
         }
       }
     </GroupContext.Consumer>
