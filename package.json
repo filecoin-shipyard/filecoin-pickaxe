@@ -22,7 +22,7 @@
     "ink": "^2.1.1",
     "meow": "^5.0.0",
     "node-fetch": "^2.3.0",
-    "peer-base": "0.12.0-rc6",
+    "peer-base": "peer-base/peer-base#fix/load-ormap-causal-context",
     "protocol-words": "^0.0.7",
     "react": "^16.8.6"
   },

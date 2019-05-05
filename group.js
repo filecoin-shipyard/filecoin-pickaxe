@@ -35,6 +35,10 @@ class Group {
     await this.collaboration.stop()
     await this.app.stop()
   }
+
+  async bundleImports () {
+    return await this.collaboration.sub('bundleImports', 'ormap')
+  }
 }
 
 let group

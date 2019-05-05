@@ -18,12 +18,34 @@ function Import ({ group }) {
     const files = group.collaboration.shared.value()
     if (files.length === 0) return
     const lastFile = files[files.length - 1]
-    const json = JSON.parse(lastFile)
-    const file = json.sources[0].file // FIXME: Quick hack
+    const { name, sources } = JSON.parse(lastFile)
+    const file = sources[0].file // FIXME: Quick hack
     setFile(file)
     const data = fs.createReadStream(file)
     fc.client.import(data)
-      .then(cid => !unmounted && setCid(cid.toString()))
+      .then(async cid => {
+        if (unmounted) return
+        const cidString = cid.toString()
+        const bundleImports = await group.bundleImports()
+        const record = {
+          sources: [
+            { single: cidString }
+          ]
+        }
+        // console.log('Jim1', name, JSON.stringify(record))
+        bundleImports.shared.applySub(
+          name, 'ormap', 'applySub',
+          `${Date.now()}`, 'mvreg', 'write',
+          JSON.stringify(record)
+        )
+        /*
+        bundleImports.shared.applySub(
+          name, 'mvreg', 'write',
+          JSON.stringify(record)
+        )
+        */
+        setCid(cidString)
+      })
       .catch(error => !unmounted && setError(error))
     return () => { umounted = true }
   }, [])

@@ -4,6 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     {
       "type": "node",
       "request": "launch",
@@ -48,6 +49,19 @@
       "args": [
         "add",
         "README.md"
+      ],
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "babel-node"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "pickaxe import",
+      "program": "${workspaceFolder}/index.js",
+      "args": [
+        "import"
       ],
       "runtimeExecutable": "npx",
       "runtimeArgs": [
