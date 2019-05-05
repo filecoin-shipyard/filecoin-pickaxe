@@ -4,7 +4,7 @@
   "description": "Tool for storing/retrieving data in Filecoin",
   "scripts": {
     "help": "babel-node index.js --help",
-    "build": "babel *.js --out-dir dist",
+    "build": "babel *.js --out-dir dist && babel commands/*.js --out-dir dist/commands",
     "prepublish": "npm run build"
   },
   "bin": {
