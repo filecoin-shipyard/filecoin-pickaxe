@@ -18,27 +18,13 @@ function Import ({ group }) {
     const files = group.collaboration.shared.value()
     if (files.length === 0) return
     const lastFile = files[files.length - 1]
-    const match = lastFile.match(/^Add: \d+ (.*)$/)
-    if (!match) return
-    const file = match[1]
+    const json = JSON.parse(lastFile)
+    const file = json.sources[0].file // FIXME: Quick hack
     setFile(file)
     const data = fs.createReadStream(file)
     fc.client.import(data)
       .then(cid => !unmounted && setCid(cid.toString()))
       .catch(error => !unmounted && setError(error))
-
-    /*
-    function doWork () {
-      count++
-      setCounter(count)
-      if (count <= 10) {
-        setTimeout(doWork, 1000)
-      } else {
-        setDone(true)
-      }
-    }
-    setTimeout(doWork, 0)
-    */
     return () => { umounted = true }
   }, [])
 
