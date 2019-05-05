@@ -3,14 +3,15 @@ import { Box } from 'ink'
 import GroupContext from '../groupContext'
 import addFile from './addFile' 
 import ListBundles from './listBundles'
+import useFilecoinConfig from '../useFilecoinConfig'
 
-function Add ({ fileOrDir, group, onError }) {
+function Add ({ fileOrDir, group, nickname, onError }) {
   const [added, setAdded] = useState()
 
   useEffect(() => {
     let unmounted = false
     async function run () {
-      await addFile({ group, fileOrDir, onError })
+      await addFile({ group, fileOrDir, nickname, onError })
       if (!unmounted) {
         setAdded(true)
       }
@@ -23,15 +24,20 @@ function Add ({ fileOrDir, group, onError }) {
 }
 
 export default function AddFileOrDir ({ fileOrDir, onError }) {
+  const [nickname] = useFilecoinConfig('heartbeat.nickname')
   return (
     <GroupContext.Consumer>
       {
         group => {
-          if (!group) {
+          if (!group || !nickname) {
             return <Box>Loading...</Box>
           }
           return (
-            <Add fileOrDir={fileOrDir} group={group} onError={onError} />
+            <Add
+              fileOrDir={fileOrDir}
+              group={group}
+              nickname={nickname}
+              onError={onError} />
           )
         }
       }

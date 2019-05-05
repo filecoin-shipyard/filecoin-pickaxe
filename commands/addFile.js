@@ -1,11 +1,17 @@
 import { promisify } from 'util'
 import fs from 'fs'
+import path from 'path'
+import os from 'os'
+import Haikunator from 'haikunator'
+import { adjectives, nouns } from 'protocol-words'
 
 const stat = promisify(fs.stat)
+const haikunator = new Haikunator({ adjectives, nouns })
 
 export default async function addFile ({
   group,
   fileOrDir,
+  nickname,
   onError
 }) {
   if (!fileOrDir) {
@@ -22,7 +28,18 @@ export default async function addFile ({
       onError('Only file imports are supported')
       return
     }
-    group.collaboration.shared.push(`Add: ${Date.now()} ${fileOrDir}`)
+    const bundleRecord = {
+      timestamp: Date.now(),
+      name: haikunator.haikunate(),
+      sources: [
+        {
+          nickname,
+          hostname: os.hostname(),
+          file: path.resolve(fileOrDir)
+        }
+      ]
+    }
+    group.collaboration.shared.push(JSON.stringify(bundleRecord))
   } catch (e) {
     // console.error('Exception', e)
     if (e.code === 'ENOENT') {

@@ -39,6 +39,20 @@
       "runtimeArgs": [
         "babel-node"
       ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "pickaxe add README.md",
+      "program": "${workspaceFolder}/index.js",
+      "args": [
+        "add",
+        "README.md"
+      ],
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "babel-node"
+      ]
     }
   ]
 }
