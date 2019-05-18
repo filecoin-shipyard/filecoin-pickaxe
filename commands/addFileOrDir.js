@@ -3,7 +3,7 @@ import { Box } from 'ink'
 import GroupContext from '../groupContext'
 import addFile from './addFile' 
 import ListBundles from './listBundles'
-import useFilecoinConfig from '../useFilecoinConfig'
+import useFilecoinConfig from '@jimpick/use-filecoin-config'
 
 function Add ({ fileOrDir, group, nickname, onError }) {
   const [added, setAdded] = useState()

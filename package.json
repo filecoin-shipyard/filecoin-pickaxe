@@ -14,6 +14,7 @@
   "author": "Jim Pick (@jimpick)",
   "license": "MIT",
   "dependencies": {
+    "@jimpick/use-filecoin-config": "^0.0.2",
     "bignumber.js": "^8.1.1",
     "delay": "^4.2.0",
     "figures": "^2.0.0",
