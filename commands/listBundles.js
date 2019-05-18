@@ -2,7 +2,7 @@ import path from 'path'
 import React, { useEffect, useState } from 'react'
 import { Box, Color } from 'ink'
 import GroupContext from '../groupContext'
-import ExitNow from '../inkExitNow'
+import ExitNow from '@jimpick/ink-exit-now'
 
 function Bundle ({ bundle, bundleImports, flags }) {
   if (flags && flags.raw) {

@@ -1,6 +1,6 @@
 {
   "name": "filecoin-pickaxe",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Tool for storing/retrieving data in Filecoin",
   "scripts": {
     "help": "babel-node index.js --help",
@@ -14,6 +14,8 @@
   "author": "Jim Pick (@jimpick)",
   "license": "MIT",
   "dependencies": {
+    "@jimpick/ink-exit-now": "^0.0.1",
+    "@jimpick/ink-watch-for-exit-key": "^0.0.1",
     "@jimpick/use-filecoin-config": "^0.0.2",
     "bignumber.js": "^8.1.1",
     "delay": "^4.2.0",
