@@ -5,6 +5,7 @@ import Filecoin from 'filecoin-api-client'
 import GroupContext from '../groupContext'
 import ExitNow from '../inkExitNow'
 import WatchForExitKey from '../inkWatchForExitKey'
+import useFilecoinVersion from '../useFilecoinVersion'
 
 const fc = Filecoin()
 
@@ -12,9 +13,12 @@ function Import ({ group }) {
   const [file, setFile] = useState()
   const [cid, setCid] = useState()
   const [error, setError] = useState()
+  // const [version] = useFilecoinVersion()
+  // FIXME: go-filecoin version API call was removed
 
   useEffect(() => {
     let unmounted
+    // if (!version) return
     const files = group.collaboration.shared.value()
     if (files.length === 0) return
     const lastFile = files[files.length - 1]
@@ -29,25 +33,22 @@ function Import ({ group }) {
         const bundleImports = await group.bundleImports()
         const record = {
           sources: [
-            { single: cidString }
+            {
+              single: cidString,
+              // filecoinVersion: version
+            }
           ]
         }
-        // console.log('Jim1', name, JSON.stringify(record))
         bundleImports.shared.applySub(
           name, 'ormap', 'applySub',
           `${Date.now()}`, 'mvreg', 'write',
           JSON.stringify(record)
         )
-        /*
-        bundleImports.shared.applySub(
-          name, 'mvreg', 'write',
-          JSON.stringify(record)
-        )
-        */
         setCid(cidString)
       })
       .catch(error => !unmounted && setError(error))
     return () => { umounted = true }
+  // }, [version])
   }, [])
 
   if (!file) {
@@ -59,9 +60,9 @@ function Import ({ group }) {
   }
   if (error) {
     return (
-      <Error>
-        Error: {error.toString()}
-      </Error>
+      <Box>
+        Error: {`${error}`}
+      </Box>
     )
   }
   return (

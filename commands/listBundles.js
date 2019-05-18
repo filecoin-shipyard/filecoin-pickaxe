@@ -23,9 +23,10 @@ function Bundle ({ bundle, bundleImports, flags }) {
     const last = biv[name][times[times.length - 1]]
     if (last) {
       const importRecord = JSON.parse([...last][0])
+      const { single, filecoinVersion } = importRecord.sources[0]
       cid = <Box>
         {' '}
-        {`${importRecord.sources[0].single}`}
+        {`${single} ${filecoinVersion}`}
       </Box>
     }
   }
