@@ -32,18 +32,11 @@ function Import ({ group }) {
             { single: cidString }
           ]
         }
-        // console.log('Jim1', name, JSON.stringify(record))
         bundleImports.shared.applySub(
           name, 'ormap', 'applySub',
           `${Date.now()}`, 'mvreg', 'write',
           JSON.stringify(record)
         )
-        /*
-        bundleImports.shared.applySub(
-          name, 'mvreg', 'write',
-          JSON.stringify(record)
-        )
-        */
         setCid(cidString)
       })
       .catch(error => !unmounted && setError(error))

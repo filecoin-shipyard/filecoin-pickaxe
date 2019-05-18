@@ -22,7 +22,6 @@ const cli = meow(
 
       $ pickaxe add <file>
       $ pickaxe import
-      $ pickaxe cids
 
     Commands:
 
@@ -45,11 +44,6 @@ const cli = meow(
           * gets data from sources:
               * reads files
           * importing the data into the local Filecoin node
-
-      pickaxe cids [--bundle <bundle-name>]
-
-        - lists the CIDs imported into the local Filecoin node
-          for the bundle
 
       pickaxe ls [--raw]
 
