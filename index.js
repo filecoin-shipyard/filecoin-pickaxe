@@ -3,7 +3,11 @@
 import meow from 'meow'
 import React, { useState } from 'react'
 import { render, Box, Color } from 'ink'
-import { CommandRouter, CommandMatch, CommandDefault } from './commandRouter'
+import {
+  CommandRouter,
+  CommandMatch,
+  CommandDefault
+} from '@jimpick/react-command-router'
 import ExitNow from '@jimpick/ink-exit-now'
 import { groupStart, groupStop } from './group'
 import { ConnectGroup } from './groupContext'
