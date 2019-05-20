@@ -1,10 +1,13 @@
 import fs from 'fs'
+import util from 'util'
 import React, { useState, useEffect } from 'react'
 import { Box } from 'ink'
 import Filecoin from 'filecoin-api-client'
 import GroupContext from '../groupContext'
 import ExitNow from '@jimpick/ink-exit-now'
 import WatchForExitKey from '@jimpick/ink-watch-for-exit-key'
+
+const stat = util.promisify(fs.stat)
 
 const fc = Filecoin()
 
@@ -21,25 +24,33 @@ function Import ({ group }) {
     const { name, sources } = JSON.parse(lastFile)
     const file = sources[0].file // FIXME: Quick hack
     setFile(file)
-    const data = fs.createReadStream(file)
-    fc.client.import(data)
-      .then(async cid => {
-        if (unmounted) return
-        const cidString = cid.toString()
-        const bundleImports = await group.bundleImports()
-        const record = {
-          sources: [
-            { single: cidString }
-          ]
-        }
-        bundleImports.shared.applySub(
-          name, 'ormap', 'applySub',
-          `${Date.now()}`, 'mvreg', 'write',
-          JSON.stringify(record)
-        )
-        setCid(cidString)
-      })
-      .catch(error => !unmounted && setError(error))
+    async function run () {
+      const stats = await stat(file)
+      if (unmounted) return
+      const data = fs.createReadStream(file)
+      fc.client.import(data)
+        .then(async cid => {
+          if (unmounted) return
+          const cidString = cid.toString()
+          const bundleImports = await group.bundleImports()
+          const record = {
+            sources: [
+              {
+                single: cidString,
+                stats
+              }
+            ]
+          }
+          bundleImports.shared.applySub(
+            name, 'ormap', 'applySub',
+            `${Date.now()}`, 'mvreg', 'write',
+            JSON.stringify(record)
+          )
+          setCid(cidString)
+        })
+        .catch(error => !unmounted && setError(error))
+    }
+    run()
     return () => { umounted = true }
   }, [])
 
@@ -64,7 +75,7 @@ function Import ({ group }) {
       </Box>
       <Box>
         CID: {cid}
-        {cid && <ExitNow />}
+        {cid && <WatchForExitKey />}
       </Box>
     </Box>
   )
