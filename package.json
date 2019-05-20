@@ -27,6 +27,7 @@
     "meow": "^5.0.0",
     "node-fetch": "^2.3.0",
     "peer-base": "peer-base/peer-base#fix/load-ormap-causal-context",
+    "pretty-bytes": "^5.2.0",
     "protocol-words": "^0.0.7",
     "react": "^16.8.6"
   },

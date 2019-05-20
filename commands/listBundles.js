@@ -1,6 +1,7 @@
 import path from 'path'
 import React, { useEffect, useState } from 'react'
 import { Box, Color } from 'ink'
+import prettyBytes from 'pretty-bytes'
 import GroupContext from '../groupContext'
 import ExitNow from '@jimpick/ink-exit-now'
 
@@ -24,8 +25,10 @@ function Bundle ({ bundle, bundleImports, flags }) {
     if (last) {
       const importRecord = JSON.parse([...last][0])
       cid = <Box>
-        {' '}
-        {`${importRecord.sources[0].single}`}
+        <Color magenta>
+          {` ${prettyBytes(importRecord.sources[0].stats.size)}`}
+        </Color>
+        {` ${importRecord.sources[0].single}`}
       </Box>
     }
   }
