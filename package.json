@@ -25,6 +25,7 @@
     "haikunator": "^2.1.1",
     "ink": "^2.1.1",
     "meow": "^5.0.0",
+    "multihashes": "^0.4.14",
     "node-fetch": "^2.3.0",
     "peer-base": "peer-base/peer-base#fix/load-ormap-causal-context",
     "pretty-bytes": "^5.2.0",

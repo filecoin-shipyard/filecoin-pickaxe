@@ -129,7 +129,7 @@ const Main = () => {
 }
 
 async function run () {
-  await groupStart()
+  await groupStart('filecoin-pickaxe')
 
   const { unmount, rerender, waitUntilExit } = render(<Main />)
 

@@ -1,13 +1,18 @@
-import { resolve } from 'path'
+import assert from 'assert'
+import fs from 'fs'
+import path from 'path'
+import { homedir } from 'os'
 import PeerBase from 'peer-base'
 import IPFSRepo from 'ipfs-repo'
-import { homedir } from 'os'
+import multihash from 'multihashes'
 
 class Group {
-  constructor () {
-    const repoPath = resolve(homedir(), '.filecoin-pickaxe')
-    const repo = new IPFSRepo(repoPath)
-    this.app = PeerBase('peer-pad/2', {
+  constructor (repoName) {
+    assert(!!repoName)
+    this.repoPath = path.resolve(homedir(), '.' + repoName)
+    const repo = new IPFSRepo(this.repoPath)
+    const appName = 'peer-pad/2' // Re-use pinning infrastructure set up for PeerPad
+    this.app = PeerBase(appName, {
       ipfs: {
         repo,
         swarm: ['/dns4/ws-star1.par.dwebops.pub/tcp/443/wss/p2p-websocket-star'],
@@ -26,9 +31,31 @@ class Group {
   }
 
   async start () {
+    const configFile = path.join(this.repoPath, 'pickaxe-config')
+    if (fs.existsSync(configFile)) {
+      const config = fs.readFileSync(configFile, 'utf8')
+      const { readKey, writeKey } = JSON.parse(config)
+      this.keys = await PeerBase.keys.uriDecode(readKey + '-' + writeKey)
+    } else {
+      this.keys = await PeerBase.keys.generate()
+      const readKey = PeerBase.keys.uriEncodeReadOnly(this.keys)
+      const writeKey = PeerBase.keys.uriEncode(this.keys).replace(/^.*-/, '')
+      const confit = { readKey, writeKey }
+      fs.writeFileSync(configFile, JSON.stringify(config, null, 2))
+    }
+
+    const data = Buffer.concat([
+      Buffer.from('pickaxe'),
+      this.keys.read.marshal()
+    ])
+    const hashed = multihash.encode(data, 'sha2-256')
+    const hashedName = multihash.toB58String(hashed)
     const name = 'pickaxe-dev'
     await this.app.start()
-    this.collaboration = await this.app.collaborate(name, 'rga')
+    const options = {
+      keys: this.keys
+    }
+    this.collaboration = await this.app.collaborate(hashedName, 'rga', options)
   }
 
   async stop () {
@@ -43,8 +70,8 @@ class Group {
 
 let group
 
-export async function groupStart () {
-  group = new Group()
+export async function groupStart (repoName) {
+  group = new Group(repoName)
   await group.start()
 }
 
