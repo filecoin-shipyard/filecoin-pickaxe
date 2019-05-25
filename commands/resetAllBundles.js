@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Box } from 'ink'
-import MineshaftContext from '../mineshaftContext'
+import MineshaftContext from '@jimpick/filecoin-pickaxe-mineshaft-context'
 import ListBundles from './listBundles'
 
 function Reset ({ mineshaft, onError }) {

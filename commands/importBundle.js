@@ -3,7 +3,7 @@ import util from 'util'
 import React, { useState, useEffect } from 'react'
 import { Box } from 'ink'
 import Filecoin from 'filecoin-api-client'
-import MineshaftContext from '../mineshaftContext'
+import MineshaftContext from '@jimpick/filecoin-pickaxe-mineshaft-context'
 import ExitNow from '@jimpick/ink-exit-now'
 import WatchForExitKey from '@jimpick/ink-watch-for-exit-key'
 

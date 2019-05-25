@@ -2,7 +2,7 @@ import path from 'path'
 import React, { useEffect, useState } from 'react'
 import { Box, Color } from 'ink'
 import prettyBytes from 'pretty-bytes'
-import MineshaftContext from '../mineshaftContext'
+import MineshaftContext from '@jimpick/filecoin-pickaxe-mineshaft-context'
 import ExitNow from '@jimpick/ink-exit-now'
 
 function Bundle ({ bundle, bundleImports, flags }) {

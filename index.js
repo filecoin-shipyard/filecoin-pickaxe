@@ -10,7 +10,7 @@ import {
 } from '@jimpick/react-command-router'
 import ExitNow from '@jimpick/ink-exit-now'
 import { mineshaftStart, mineshaftStop } from '@jimpick/filecoin-pickaxe-mineshaft'
-import { ConnectMineshaft } from './mineshaftContext'
+import { ConnectMineshaft } from '@jimpick/filecoin-pickaxe-mineshaft-context'
 import WatchForExitKey from '@jimpick/ink-watch-for-exit-key'
 import ListBundles from './commands/listBundles'
 import AddFileOrDir from './commands/addFileOrDir'
