@@ -20,7 +20,6 @@
     "@jimpick/ink-watch-for-exit-key": "^0.0.4",
     "@jimpick/react-command-router": "^0.0.3",
     "@jimpick/use-filecoin-config": "^0.0.4",
-    "bignumber.js": "^8.1.1",
     "delay": "^4.2.0",
     "figures": "^3.0.0",
     "filecoin-api-client": "^0.2.0",
