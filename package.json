@@ -14,6 +14,7 @@
   "author": "Jim Pick (@jimpick)",
   "license": "MIT",
   "dependencies": {
+    "@jimpick/filecoin-pickaxe-mineshaft": "^0.0.1",
     "@jimpick/ink-exit-now": "^0.0.1",
     "@jimpick/ink-watch-for-exit-key": "^0.0.1",
     "@jimpick/react-command-router": "^0.0.2",
@@ -25,9 +26,7 @@
     "haikunator": "^2.1.1",
     "ink": "^2.1.1",
     "meow": "^5.0.0",
-    "multihashes": "^0.4.14",
     "node-fetch": "^2.3.0",
-    "peer-base": "peer-base/peer-base#fix/load-ormap-causal-context",
     "pretty-bytes": "^5.2.0",
     "protocol-words": "^0.0.7",
     "react": "^16.8.6"

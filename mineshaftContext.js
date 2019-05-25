@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getMineshaft } from './mineshaft' 
+import { getMineshaft } from '@jimpick/filecoin-pickaxe-mineshaft' 
 
 const MineshaftContext = React.createContext()
 
