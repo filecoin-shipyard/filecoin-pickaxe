@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { Box } from 'ink'
-import GroupContext from '../groupContext'
+import MineshaftContext from '../mineshaftContext'
 import addFile from './addFile' 
 import ListBundles from './listBundles'
 import useFilecoinConfig from '@jimpick/use-filecoin-config'
 
-function Add ({ fileOrDir, group, nickname, onError }) {
+function Add ({ fileOrDir, mineshaft, nickname, onError }) {
   const [added, setAdded] = useState()
 
   useEffect(() => {
     let unmounted = false
     async function run () {
-      await addFile({ group, fileOrDir, nickname, onError })
+      await addFile({ mineshaft, fileOrDir, nickname, onError })
       if (!unmounted) {
         setAdded(true)
       }
@@ -26,21 +26,21 @@ function Add ({ fileOrDir, group, nickname, onError }) {
 export default function AddFileOrDir ({ fileOrDir, onError }) {
   const [nickname] = useFilecoinConfig('heartbeat.nickname')
   return (
-    <GroupContext.Consumer>
+    <MineshaftContext.Consumer>
       {
-        group => {
-          if (!group || !nickname) {
+        mineshaft => {
+          if (!mineshaft || !nickname) {
             return <Box>Loading...</Box>
           }
           return (
             <Add
+              mineshaft={mineshaft}
               fileOrDir={fileOrDir}
-              group={group}
               nickname={nickname}
               onError={onError} />
           )
         }
       }
-    </GroupContext.Consumer>
+    </MineshaftContext.Consumer>
   )
 }

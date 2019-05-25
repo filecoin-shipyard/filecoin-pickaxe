@@ -9,8 +9,8 @@ import {
   CommandDefault
 } from '@jimpick/react-command-router'
 import ExitNow from '@jimpick/ink-exit-now'
-import { groupStart, groupStop } from './group'
-import { ConnectGroup } from './groupContext'
+import { mineshaftStart, mineshaftStop } from './mineshaft'
+import { ConnectMineshaft } from './mineshaftContext'
 import WatchForExitKey from '@jimpick/ink-watch-for-exit-key'
 import ListBundles from './commands/listBundles'
 import AddFileOrDir from './commands/addFileOrDir'
@@ -94,7 +94,7 @@ const Main = () => {
   }
 
   return (
-    <ConnectGroup>
+    <ConnectMineshaft>
       <Box flexDirection="column">
         <CommandRouter command={command}>
           <CommandMatch command="add">
@@ -124,12 +124,12 @@ const Main = () => {
           </CommandDefault>
         </CommandRouter>
       </Box>
-    </ConnectGroup>
+    </ConnectMineshaft>
   )
 }
 
 async function run () {
-  await groupStart('filecoin-pickaxe')
+  await mineshaftStart('filecoin-pickaxe')
 
   const { unmount, rerender, waitUntilExit } = render(<Main />)
 
@@ -137,7 +137,7 @@ async function run () {
 
   try {
     await waitUntilExit()
-    await groupStop()
+    await mineshaftStop()
     process.exit(0)
   } catch (e) {
     if (e.message !== 'Error displayed') {

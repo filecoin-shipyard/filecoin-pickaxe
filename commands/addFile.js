@@ -9,7 +9,7 @@ const stat = promisify(fs.stat)
 const haikunator = new Haikunator({ adjectives, nouns })
 
 export default async function addFile ({
-  group,
+  mineshaft,
   fileOrDir,
   nickname,
   onError
@@ -39,7 +39,7 @@ export default async function addFile ({
         }
       ]
     }
-    group.collaboration.shared.push(JSON.stringify(bundleRecord))
+    mineshaft.collaboration.shared.push(JSON.stringify(bundleRecord))
   } catch (e) {
     // console.error('Exception', e)
     if (e.code === 'ENOENT') {

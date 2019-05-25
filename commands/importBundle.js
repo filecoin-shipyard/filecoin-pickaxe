@@ -3,7 +3,7 @@ import util from 'util'
 import React, { useState, useEffect } from 'react'
 import { Box } from 'ink'
 import Filecoin from 'filecoin-api-client'
-import GroupContext from '../groupContext'
+import MineshaftContext from '../mineshaftContext'
 import ExitNow from '@jimpick/ink-exit-now'
 import WatchForExitKey from '@jimpick/ink-watch-for-exit-key'
 
@@ -11,14 +11,14 @@ const stat = util.promisify(fs.stat)
 
 const fc = Filecoin()
 
-function Import ({ group }) {
+function Import ({ mineshaft }) {
   const [file, setFile] = useState()
   const [cid, setCid] = useState()
   const [error, setError] = useState()
 
   useEffect(() => {
     let unmounted
-    const files = group.collaboration.shared.value()
+    const files = mineshaft.collaboration.shared.value()
     if (files.length === 0) return
     const lastFile = files[files.length - 1]
     const { name, sources } = JSON.parse(lastFile)
@@ -32,7 +32,7 @@ function Import ({ group }) {
         .then(async cid => {
           if (unmounted) return
           const cidString = cid.toString()
-          const bundleImports = await group.bundleImports()
+          const bundleImports = await mineshaft.bundleImports()
           const record = {
             sources: [
               {
@@ -83,10 +83,10 @@ function Import ({ group }) {
 
 export default function ImportBundle () {
   return (
-    <GroupContext.Consumer>
+    <MineshaftContext.Consumer>
       {
-        group => {
-          if (!group) {
+        mineshaft => {
+          if (!mineshaft) {
             return (
               <>
                 <Box>Loading...</Box>
@@ -97,13 +97,13 @@ export default function ImportBundle () {
           return (
             <>
               <Box>Import</Box>
-              <Import group={group} />
+              <Import mineshaft={mineshaft} />
               <WatchForExitKey />
             </>
           )
         }
       }
-    </GroupContext.Consumer>
+    </MineshaftContext.Consumer>
   )
 }
 

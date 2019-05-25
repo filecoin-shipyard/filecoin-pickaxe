@@ -2,7 +2,7 @@ import path from 'path'
 import React, { useEffect, useState } from 'react'
 import { Box, Color } from 'ink'
 import prettyBytes from 'pretty-bytes'
-import GroupContext from '../groupContext'
+import MineshaftContext from '../mineshaftContext'
 import ExitNow from '@jimpick/ink-exit-now'
 
 function Bundle ({ bundle, bundleImports, flags }) {
@@ -45,8 +45,8 @@ function Bundle ({ bundle, bundleImports, flags }) {
   )
 }
 
-function ListAll ({ group, bundleImports, flags }) {
-  const bundles = group.collaboration.shared.value()
+function ListAll ({ mineshaft, bundleImports, flags }) {
+  const bundles = mineshaft.collaboration.shared.value()
   return (
     <Box flexDirection="column">
       <Box>
@@ -64,27 +64,27 @@ function ListAll ({ group, bundleImports, flags }) {
   )
 }
 
-function ListBundlesWithImports ({ group, flags }) {
+function ListBundlesWithImports ({ mineshaft, flags }) {
   const [bundleImports, setBundleImports] = useState()
 
   useEffect(() => {
-    if (!group) return
+    if (!mineshaft) return
     let unmounted = false
     async function run () {
-      const loaded = await group.bundleImports()
+      const loaded = await mineshaft.bundleImports()
       if (!unmounted) {
         setBundleImports(loaded)
       }
     }
     run()
     return () => { umounted = true }
-  }, [group])
+  }, [mineshaft])
 
   if (!bundleImports) return <Box>Loading...</Box>
 
   return (
     <ListAll
-      group={group}
+      mineshaft={mineshaft}
       bundleImports={bundleImports}
       flags={flags} />
   )
@@ -92,19 +92,19 @@ function ListBundlesWithImports ({ group, flags }) {
 
 export default function ListBundles ({ flags }) {
   return (
-    <GroupContext.Consumer>
+    <MineshaftContext.Consumer>
       {
-        group => {
-          if (!group) {
+        mineshaft => {
+          if (!mineshaft) {
             return <Box>Loading...</Box>
           }
           return (
             <ListBundlesWithImports
-              group={group}
+              mineshaft={mineshaft}
               flags={flags} />
           )
         }
       }
-    </GroupContext.Consumer>
+    </MineshaftContext.Consumer>
   )
 }

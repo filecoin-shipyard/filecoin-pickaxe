@@ -1,35 +1,36 @@
 import React, { useState, useEffect } from 'react'
 import { Box } from 'ink'
-import GroupContext from '../groupContext'
+import MineshaftContext from '../mineshaftContext'
 import ListBundles from './listBundles'
 
-function Reset ({ group, onError }) {
+function Reset ({ mineshaft, onError }) {
   const [reset, setReset] = useState()
 
   useEffect(() => {
-    if (!group) return
-    for (let i = 0; i <= group.collaboration.shared.value().length; i++) {
-      group.collaboration.shared.removeAt(0)
+    if (!mineshaft) return
+    const shared = mineshaft.collaboration.shared
+    for (let i = 0; i <= shared.value().length; i++) {
+      shared.removeAt(0)
     }
     setReset(true)
-  }, [group])
+  }, [mineshaft])
 
   return reset ? <ListBundles /> : <Box>Resetting...</Box>
 }
 
 export default function ResetAllBundles ({ onError }) {
   return (
-    <GroupContext.Consumer>
+    <MineshaftContext.Consumer>
       {
-        group => {
-          if (!group) {
+        mineshaft => {
+          if (!mineshaft) {
             return <Box>Loading...</Box>
           }
           return (
-            <Reset group={group} onError={onError} />
+            <Reset mineshaft={mineshaft} onError={onError} />
           )
         }
       }
-    </GroupContext.Consumer>
+    </MineshaftContext.Consumer>
   )
 }

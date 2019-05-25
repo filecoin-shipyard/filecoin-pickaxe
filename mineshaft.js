@@ -6,7 +6,7 @@ import PeerBase from 'peer-base'
 import IPFSRepo from 'ipfs-repo'
 import multihash from 'multihashes'
 
-class Group {
+export class Mineshaft {
   constructor (repoName) {
     assert(!!repoName)
     this.repoPath = path.resolve(homedir(), '.' + repoName)
@@ -68,17 +68,18 @@ class Group {
   }
 }
 
-let group
+let mineshaft // Singleton
 
-export async function groupStart (repoName) {
-  group = new Group(repoName)
-  await group.start()
+export async function mineshaftStart (repoName) {
+  mineshaft = new Mineshaft(repoName)
+  await mineshaft.start()
+  return mineshaft
 }
 
-export function getGroup () {
-  return group
+export function getMineshaft () {
+  return mineshaft
 }
 
-export async function groupStop () {
-  await group.stop()
+export async function mineshaftStop () {
+  await mineshaft.stop()
 }
