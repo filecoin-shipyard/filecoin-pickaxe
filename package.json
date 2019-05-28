@@ -1,6 +1,6 @@
 {
   "name": "filecoin-pickaxe",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Tool for storing/retrieving data in Filecoin",
   "scripts": {
     "help": "babel-node index.js --help",
@@ -14,7 +14,7 @@
   "author": "Jim Pick (@jimpick)",
   "license": "MIT",
   "dependencies": {
-    "@jimpick/filecoin-pickaxe-mineshaft": "^0.0.7",
+    "@jimpick/filecoin-pickaxe-mineshaft": "^0.0.8",
     "@jimpick/filecoin-pickaxe-mineshaft-context": "^0.0.1",
     "@jimpick/ink-exit-now": "^0.0.4",
     "@jimpick/ink-watch-for-exit-key": "^0.0.4",
@@ -38,7 +38,7 @@
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "@babel/preset-env": "^7.4.5",
     "babel-plugin-shebang": "^1.0.0",
-    "nodemon": "^1.18.11"
+    "nodemon": "^1.19.1"
   },
   "babel": {
     "presets": [
