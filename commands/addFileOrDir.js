@@ -24,7 +24,7 @@ function Add ({ fileOrDir, mineshaft, nickname, onError }) {
 }
 
 export default function AddFileOrDir ({ fileOrDir, onError }) {
-  const [nickname] = useFilecoinConfig('heartbeat.nickname')
+  const [, nickname] = useFilecoinConfig('heartbeat.nickname')
   return (
     <MineshaftContext.Consumer>
       {
