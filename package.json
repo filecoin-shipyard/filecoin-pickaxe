@@ -1,6 +1,6 @@
 {
   "name": "filecoin-pickaxe",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Tool for storing/retrieving data in Filecoin",
   "scripts": {
     "help": "babel-node index.js --help",
@@ -57,6 +57,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jimpick/filecoin-pickaxe.git"
+    "url": "git+https://github.com/filecoin-shipyard/filecoin-pickaxe.git"
   }
 }
