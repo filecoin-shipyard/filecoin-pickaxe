@@ -3,7 +3,7 @@ import { Box } from 'ink'
 import MineshaftContext from '@jimpick/filecoin-pickaxe-mineshaft-context'
 import addFile from './addFile' 
 import ListBundles from './listBundles'
-import useFilecoinConfig from '@jimpick/use-filecoin-config'
+import useFilecoinConfig from '@filecoin-shipyard/use-filecoin-config'
 
 function Add ({ fileOrDir, mineshaft, nickname, onError }) {
   const [added, setAdded] = useState()
