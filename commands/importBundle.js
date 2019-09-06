@@ -8,6 +8,7 @@ import ExitNow from '@jimpick/ink-exit-now'
 import WatchForExitKey from '@jimpick/ink-watch-for-exit-key'
 
 const stat = util.promisify(fs.stat)
+const readFile = util.promisify(fs.readFile)
 
 const fc = Filecoin()
 
@@ -27,7 +28,7 @@ function Import ({ mineshaft }) {
     async function run () {
       const stats = await stat(file)
       if (unmounted) return
-      const data = fs.createReadStream(file)
+      const data = await readFile(file)
       fc.client.import(data)
         .then(async cid => {
           if (unmounted) return
@@ -63,9 +64,9 @@ function Import ({ mineshaft }) {
   }
   if (error) {
     return (
-      <Error>
+      <Box>
         Error: {error.toString()}
-      </Error>
+      </Box>
     )
   }
   return (

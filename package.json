@@ -1,6 +1,6 @@
 {
   "name": "filecoin-pickaxe",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Tool for storing/retrieving data in Filecoin",
   "scripts": {
     "help": "babel-node index.js --help",
