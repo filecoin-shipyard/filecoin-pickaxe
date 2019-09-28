@@ -1,6 +1,6 @@
 {
   "name": "filecoin-pickaxe",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Tool for storing/retrieving data in Filecoin",
   "scripts": {
     "help": "babel-node index.js --help",
@@ -17,12 +17,12 @@
     "@jimpick/filecoin-pickaxe-mineshaft": "^0.0.13",
     "@jimpick/filecoin-pickaxe-mineshaft-context": "^0.0.3",
     "@jimpick/ink-exit-now": "^0.0.5",
-    "@jimpick/ink-watch-for-exit-key": "^0.0.6",
+    "@jimpick/ink-watch-for-exit-key": "^0.0.7",
     "@jimpick/react-command-router": "^0.0.4",
-    "@filecoin-shipyard/use-filecoin-config": "^0.0.9",
+    "@filecoin-shipyard/use-filecoin-config": "^0.0.11",
     "delay": "^4.3.0",
     "figures": "^3.0.0",
-    "filecoin-api-client": "^0.5.1",
+    "filecoin-api-client": "^0.5.2",
     "haikunator": "^2.1.1",
     "ink": "^2.3.0",
     "meow": "^5.0.0",
