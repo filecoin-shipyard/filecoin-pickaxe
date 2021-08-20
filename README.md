@@ -1,6 +1,12 @@
 filecoin-pickaxe
 ================
 
+## Status
+
+This repository is in a **frozen** state. It is not being maintained or kept in sync with the tools and libraries it builds on. Even though work on this repository has been **shelved**, anyone interested in updating or maintaining this project should express their interest on one Filecoin community conversation mediums: <https://github.com/filecoin-project/community#join-the-community>.
+
+---
+
 **Work-in-progress**
 
 This is a command-line tool for managing "bundles" (groups of files)
